@@ -14,12 +14,12 @@ document.addEventListener('DOMContentLoaded', function () {
     function generateTemplate(name, data, basicElement) {
         var template = document.getElementById(name).innerHTML;
         var element = document.createElement(basicElement || 'div');
-
+      
         Mustache.parse(template);
         element.innerHTML = Mustache.render(template, data);
-
+      
         return element;
-    }
+      }
     // Column
     function Column(name) {
         var self = this;
@@ -27,18 +27,19 @@ document.addEventListener('DOMContentLoaded', function () {
         this.id = randomString();
         this.name = name;
         this.element = generateTemplate('column-template', {
-            name: this.name
+            name: this.name,
+            id: this.id
         });
-        // Delete Column
+
         this.element.querySelector('.column').addEventListener('click', function (event) {
             if (event.target.classList.contains('btn-delete')) {
                 self.removeColumn();
             }
 
             if (event.target.classList.contains('add-card')) {
-                self.addCard(new Card(prompt('Enter the name of the card')));
+                self.addCard(new Card(prompt("Enter the name of the card")));
             }
-        })
+        });
     }
 
     Column.prototype = {
@@ -68,7 +69,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     Card.prototype = {
-        removeCard: function() {
+        removeCard: function () {
             this.element.parentNode.removeChild(this.element);
         }
     }
@@ -77,7 +78,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     var board = {
         name: 'Kanban Board',
-        addColumn: function(column) {
+        addColumn: function (column) {
             this.element.appendChild(column.element);
             initSortable(column.id);
         },
@@ -89,14 +90,14 @@ document.addEventListener('DOMContentLoaded', function () {
     function initSortable(id) {
         var el = document.getElementById(id);
         var sortable = Sortable.create(el, {
-          group: 'kanban',
-          sort: true
+            group: 'kanban',
+            sort: true
         });
-      }
+    }
 
     // Create Column
 
-    document.querySelector('#board .create-column').addEventListener('click', function() {
+    document.querySelector('#board .create-column').addEventListener('click', function () {
         var name = prompt('Enter a column name');
         var column = new Column(name);
         board.addColumn(column);
